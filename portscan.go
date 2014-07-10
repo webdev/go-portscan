@@ -99,14 +99,14 @@ func report(data []byte, writer *csv.Writer) {
 	report := Report{}
 	err := xml.Unmarshal([]byte(data), &report)
 
+	//fmt.Printf("%s", &report)
+
 	if err != nil {
 		panic(err)
 	}
 	
 	i := 1
 	for _, host := range report.Host {
-		fmt.Printf("(%v/%v) %s\n", i, len(report.Host), host.Address.Addr)
-
 		ipReport := []string{host.Address.Addr}
 
 		for _, port := range host.Ports {
@@ -127,8 +127,7 @@ func report(data []byte, writer *csv.Writer) {
 }
 
 func main() {
-	//excelFileName := "iplist.xlsx"
-	excelFileName := "short.xlsx"
+	excelFileName := "iplist.xlsx"
 	excelFile, error := xlsx.OpenFile(excelFileName)
 	if error != nil {
 		fmt.Printf("Ensure the file %v exists\n", excelFileName)
@@ -148,11 +147,11 @@ func main() {
 
 	header := []string{"address"}
 
-	for port := range strings.Split(tcpPorts, ",") {
+	for _, port := range strings.Split(tcpPorts, ",") {
 		header = append(header, fmt.Sprintf("tcp/%v", port))
 	}
 
-	for port := range strings.Split(udpPorts, ",") {
+	for _, port := range strings.Split(udpPorts, ",") {
 		header = append(header, fmt.Sprintf("udp/%v", port))
 	}
 
